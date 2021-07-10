@@ -4,6 +4,12 @@ import PackageDescription
 
 let package = Package(
     name: "LyricsKit",
+    platforms: [
+        .macOS(.v10_10),
+        .iOS(.minimalToolChainSupported),
+        .tvOS(.v9),
+        .watchOS(.v2),
+    ],
     products: [
         .library(
             name: "LyricsKit",

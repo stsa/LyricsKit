@@ -1,3 +1,11 @@
+# Common
+[bB]uild/
+*~
+*.swp
+.DS_Store
+.LSOverride
+thumbs.db
+
 # Swift Package Manager
 .build
 .swiftpm
