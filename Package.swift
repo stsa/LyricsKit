@@ -77,6 +77,6 @@ extension ProcessInfo {
 
 import Foundation
 
-if ProcessInfo.processInfo.combineImplementation == .combine {
+if ProcessInfo.processInfo.combineImplementation == .combine && ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 13 {
     package.platforms = [.macOS(.v10_15), .iOS(.v13), .tvOS(.v13), .watchOS(.v6)]
 }
