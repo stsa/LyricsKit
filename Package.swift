@@ -67,16 +67,3 @@ enum CombineImplementation {
         }
     }
 }
-
-extension ProcessInfo {
-
-    var combineImplementation: CombineImplementation {
-        return environment["CX_COMBINE_IMPLEMENTATION"].flatMap(CombineImplementation.init) ?? .default
-    }
-}
-
-import Foundation
-
-if ProcessInfo.processInfo.combineImplementation == .combine && ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 13 {
-    package.platforms = [.macOS(.v10_15), .iOS(.v13), .tvOS(.v13), .watchOS(.v6)]
-}
