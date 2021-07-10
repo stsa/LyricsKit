@@ -4,12 +4,6 @@ import PackageDescription
 
 let package = Package(
     name: "LyricsKit",
-    platforms: [
-        .macOS(.v10_10),
-        .iOS(.minimalToolChainSupported),
-        .tvOS(.v9),
-        .watchOS(.v2),
-    ],
     products: [
         .library(
             name: "LyricsKit",
@@ -44,11 +38,11 @@ extension SupportedPlatform.IOSVersion {
 }
 
 enum CombineImplementation {
-    
+
     case combine
     case combineX
     case openCombine
-    
+
     static var `default`: CombineImplementation {
         #if canImport(Combine)
         return .combine
@@ -56,9 +50,9 @@ enum CombineImplementation {
         return .combineX
         #endif
     }
-    
+
     init?(_ description: String) {
-        let desc = description.lowercased().filter(\.isLetter)
+        let desc = description.lowercased().filter { $0.isLetter }
         switch desc {
         case "combine":     self = .combine
         case "combinex":    self = .combineX
@@ -66,4 +60,36 @@ enum CombineImplementation {
         default:            return nil
         }
     }
+
+    var swiftSettings: [SwiftSetting] {
+        switch self {
+        case .combine:      return [.define("USE_COMBINE")]
+        case .combineX:     return [.define("USE_COMBINEX")]
+        case .openCombine:  return [.define("USE_OPEN_COMBINE")]
+        }
+    }
 }
+
+extension Optional where Wrapped: RangeReplaceableCollection {
+
+    mutating func append(contentsOf newElements: [Wrapped.Element]) {
+        if newElements.isEmpty { return }
+
+        if let wrapped = self {
+            self = wrapped + newElements
+        } else {
+            self = .init(newElements)
+        }
+    }
+}
+
+import Foundation
+
+extension ProcessInfo {
+
+    var combineImplementation: CombineImplementation {
+        return environment["CX_COMBINE_IMPLEMENTATION"].flatMap(CombineImplementation.init) ?? .default
+    }
+}
+
+
